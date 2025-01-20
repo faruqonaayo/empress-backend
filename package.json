@@ -1,0 +1,18 @@
+{
+  "name": "empress-backend",
+  "version": "1.0.0",
+  "description": "Empress application REST API",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "author": "Faruq Ogunkunle, Chinedu Amaechi, Isabelle Helbig, Manjot Singh",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "express": "^4.21.2"
+  }
+}
