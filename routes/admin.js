@@ -8,7 +8,7 @@ import { body } from "express-validator";
 const router = express.Router();
 
 router.put(
-  "/product",
+  "/new-product",
   [
     body("productName")
       .trim()
@@ -52,14 +52,41 @@ router.put(
       .trim()
       .isLength({ min: 1 })
       .withMessage("Category cannot be empty"),
+    body("sales").trim(),
   ],
-  adminControllers.putProduct
+  adminControllers.putNewProduct
 );
 
+router.put(
+  "/new-category",
+  [
+    body("categoryName")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("The category name cannot be empty"),
+  ],
+  adminControllers.putNewCategory
+);
 
-router.get(
-  "/all-products",
-  adminControllers.getAllProducts
+router.put(
+  "/new-sales",
+  [
+    body("sales")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("The sales field cannot field cannot be empty"),
+    body("discount")
+      .trim()
+      .custom((value, { req }) => {
+        if (!value || value > 100 || value < 1) {
+          throw new Error(
+            "The percentage cannot be greater than 100 or less than 1"
+          );
+        }
+        return true;
+      }),
+  ],
+  adminControllers.putNewSales
 );
 
 export default router;

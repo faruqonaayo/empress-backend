@@ -8,6 +8,7 @@ import cors from "cors";
 // custom routes
 import serverResponse from "./utils/serverResponse.js";
 import adminRoutes from "./routes/admin.js";
+import generalRoutes from "./routes/general.js";
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.get("/", (req, res, next) => {
   return serverResponse(res, 200, "Welcome to empress backen REST API");
 });
 app.use("/api/admin", adminRoutes);
+app.use("/api", generalRoutes);
 
 // not found route
 app.use((req, res, next) => {
