@@ -5,6 +5,7 @@ import serverResponse from "../utils/serverResponse.js";
 import Product from "../models/product.js";
 import Category from "../models/category.js";
 import Sales from "../models/sales.js";
+import mongoose from "mongoose";
 
 export async function putNewProduct(req, res, next) {
   try {
@@ -68,6 +69,32 @@ export async function putNewProduct(req, res, next) {
     await newProduct.save();
 
     return serverResponse(res, 201, "Product sucessfully added");
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteProduct(req, res, next) {
+  try {
+    const productId = req.query.id;
+    const idIsValid = mongoose.Types.ObjectId.isValid(productId);
+
+    // checking if productId is valid
+    if (!idIsValid) {
+      return serverResponse(res, 422, "Product ID is not valid");
+    }
+
+    const productExist = await Product.findOne({ _id: productId });
+
+    // checking if product exist in the database
+    if (!productExist) {
+      return serverResponse(res, 422, "Product not available");
+    }
+
+    // if it is available the product gets deleted
+    await Product.findByIdAndDelete(productId);
+
+    return serverResponse(res, 201, "Product sucessfully deleted");
   } catch (error) {
     next(error);
   }

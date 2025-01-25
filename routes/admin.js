@@ -57,6 +57,9 @@ router.put(
   adminControllers.putNewProduct
 );
 
+router.delete("/product", adminControllers.deleteProduct)
+
+
 router.put(
   "/new-category",
   [
