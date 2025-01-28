@@ -9,13 +9,14 @@ import cors from "cors";
 import serverResponse from "./utils/serverResponse.js";
 import adminRoutes from "./routes/admin.js";
 import generalRoutes from "./routes/general.js";
+import authRoutes from "./routes/auth.js";
 
 const app = express();
 
 // loading environment variables to process.env
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000 || 3000;
 const DB_URI = process.env.DB_URI;
 const DB_NAME = process.env.DB_NAME;
 
@@ -30,6 +31,7 @@ app.use(bodyParser.json());
 app.get("/", (req, res, next) => {
   return serverResponse(res, 200, "Welcome to empress backen REST API");
 });
+app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api", generalRoutes);
 
