@@ -7,6 +7,7 @@ import cors from "cors";
 
 //importing custom routes
 import adminRoutes from "./routes/admin.js";
+import generalRoutes from "./routes/general.js";
 
 // creating express app
 const app = express();
@@ -30,6 +31,7 @@ app.use(bodyParser.json());
 // static routes
 app.use(express.static("public"));
 
+app.use("/api/general", generalRoutes);
 app.use("/api/admin", adminRoutes);
 
 // not found routes

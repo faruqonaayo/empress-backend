@@ -22,6 +22,19 @@ function fileFilter(req, file, cb) {
     cb(null, false);
   }
 }
+// filtering the type of file to accept
+function productFileFilter(req, file, cb) {
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "model/gltf-binary"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+}
 
 // customizing the storage location for categories
 const categoriesStorage = multer.diskStorage({
@@ -49,6 +62,20 @@ const promotionsStorage = multer.diskStorage({
 const promotionsUploads = multer({
   storage: promotionsStorage,
   fileFilter: fileFilter,
+});
+
+// customizing the storage location for products
+const productsStorage = multer.diskStorage({
+  destination: "public/uploads/products",
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+// product image upload middleware
+const productsUploads = multer({
+  storage: productsStorage,
+  fileFilter: productFileFilter,
 });
 
 // routes
@@ -135,5 +162,116 @@ router.patch(
 
 // route to delete a promotion
 router.delete("/promotion/delete", adminControllers.deletePromotion);
+
+// route to add new product
+router.put(
+  "/new-product",
+  productsUploads.fields([
+    { name: "productImages" },
+    { name: "product3D", maxCount: 1 },
+  ]),
+  [
+    body("productName")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Product name cannot be empty"),
+    body("price")
+      .trim()
+      .custom((value, { req }) => {
+        if (value < 1) {
+          throw new Error("Price cannot be less than 1");
+        }
+        return true;
+      })
+      .withMessage("Price cannot be less than 1"),
+    body("stock")
+      .trim()
+      .custom((value, { req }) => {
+        if (value < 0) {
+          throw new Error("Stock cannot be less than 0");
+        }
+        return true;
+      })
+      .withMessage("Stock cannot be less than 0"),
+    body("visible")
+      .trim()
+      .isBoolean()
+      .withMessage("Visiblility can either be true or false"),
+    body("summary")
+      .trim()
+      .isLength({ min: 10 })
+      .withMessage("Summary should be a minimum of 10 characters"),
+    body("productCare")
+      .trim()
+      .isLength({ min: 10 })
+      .withMessage("Product care should be a minimum of 10 characters"),
+    body("description")
+      .trim()
+      .isLength({ min: 10 })
+      .withMessage("Description should be a minimum of 10 characters"),
+    body("category")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Category cannot be empty"),
+    body("promotion").trim(),
+  ],
+  adminControllers.putNewProduct
+);
+
+// route to update a product
+router.patch(
+  "/product/update",
+  [
+    body("productName")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Product name cannot be empty"),
+    body("price")
+      .trim()
+      .custom((value, { req }) => {
+        if (value < 1) {
+          throw new Error("Price cannot be less than 1");
+        }
+        return true;
+      })
+      .withMessage("Price cannot be less than 1"),
+    body("stock")
+      .trim()
+      .custom((value, { req }) => {
+        if (value < 0) {
+          throw new Error("Stock cannot be less than 0");
+        }
+        return true;
+      })
+      .withMessage("Stock cannot be less than 0"),
+    body("visible")
+      .trim()
+      .isBoolean()
+      .withMessage("Visiblility can either be true or false"),
+    body("summary")
+      .trim()
+      .isLength({ min: 10 })
+      .withMessage("Summary should be a minimum of 10 characters"),
+    body("productCare")
+      .trim()
+      .isLength({ min: 10 })
+      .withMessage("Product care should be a minimum of 10 characters"),
+    body("description")
+      .trim()
+      .isLength({ min: 10 })
+      .withMessage("Description should be a minimum of 10 characters"),
+    body("category")
+      .trim()
+      .isLength({ min: 1 })
+      .withMessage("Category cannot be empty"),
+    body("promotion").trim(),
+  ],
+  adminControllers.updateProduct
+);
+
+// route to get all products
+router.get("/all-products", adminControllers.getAllProducts);
+
+router.delete("/product/delete", adminControllers.deleteProduct);
 
 export default router;
