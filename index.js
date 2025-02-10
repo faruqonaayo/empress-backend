@@ -1,51 +1,55 @@
-// 3rd poarty module
+// importing 3rd party modules
 import express from "express";
-import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import bodyParser from "body-parser";
 import cors from "cors";
 
-// custom routes
-import serverResponse from "./utils/serverResponse.js";
+//importing custom routes
 import adminRoutes from "./routes/admin.js";
-import generalRoutes from "./routes/general.js";
-import authRoutes from "./routes/auth.js";
 
+// creating express app
 const app = express();
 
 // loading environment variables to process.env
 dotenv.config();
 
-const PORT = process.env.PORT || 8000 || 3000;
+// CONSTANTS
+const PORT = process.env.PORT || 3000;
 const DB_URI = process.env.DB_URI;
 const DB_NAME = process.env.DB_NAME;
 
-// connect  to db
+// connect to database
 mongoose.connect(DB_URI, { dbName: DB_NAME });
 
-// using 3rd party midddleware
+// using 3rd party middleware
 app.use(cors());
 app.use(bodyParser.json());
 
-// my routes
-app.get("/", (req, res, next) => {
-  return serverResponse(res, 200, "Welcome to empress backen REST API");
-});
-app.use("/api/auth", authRoutes);
+// application routes
+// static routes
+app.use(express.static("public"));
+
 app.use("/api/admin", adminRoutes);
-app.use("/api", generalRoutes);
 
-// not found route
+// not found routes
 app.use((req, res, next) => {
-  return serverResponse(res, 404, "Route not found");
+  return res.status(404).json({
+    message: "Route not found",
+    statusCode: 404,
+  });
 });
 
-// error route
+// error routes
 app.use((error, req, res, next) => {
   console.log(error);
-  return serverResponse(res, 500, "Internal server error");
+  return res.status(500).json({
+    message: "Internal server error",
+    statusCode: 500,
+  });
 });
 
+// server is listening
 app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+  console.log(`Server is listening on port ${PORT}...`);
 });

@@ -1,7 +1,7 @@
 {
-  "name": "empress-backend",
+  "name": "empress-management-system-backend",
   "version": "1.0.0",
-  "description": "Empress application REST API",
+  "description": "This is the backend API for empress business",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -9,15 +9,16 @@
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
-  "author": "Faruq Ogunkunle, Chinedu Amaechi, Isabelle Helbig, Manjot Singh",
+  "author": "Faruq Ayomide Ogunkunle",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
+    "app-root-path": "^3.1.0",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-validator": "^7.2.1",
-    "mongoose": "^8.9.5"
+    "mongoose": "^8.9.6",
+    "multer": "^1.4.5-lts.1"
   }
 }
