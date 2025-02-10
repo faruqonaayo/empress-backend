@@ -5,6 +5,7 @@ import serverResponse from "../utils/serverResponse.js";
 import Product from "../models/product.js";
 import Category from "../models/category.js";
 import Sales from "../models/sales.js";
+import messages from "../models/messages.js";
 import mongoose from "mongoose";
 
 export async function putNewProduct(req, res, next) {

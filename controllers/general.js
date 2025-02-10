@@ -2,6 +2,7 @@
 import Category from "../models/category.js";
 import Product from "../models/product.js";
 import Sales from "../models/sales.js";
+import Messages from "../models/messages.js";
 import serverResponse from "../utils/serverResponse.js";
 
 export async function getAllProducts(req, res, next) {
@@ -34,6 +35,18 @@ export async function getAllSales(req, res, next) {
 
     return serverResponse(res, 200, "All sales sucessfully fetched", {
       sales: allSales,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getAllMessages(req, res, next) {
+  try {
+    const allMessages = await Messages.find({});
+
+    return serverResponse(res, 200, "All messages sucessfully fetched", {
+      messages: allMessages,
     });
   } catch (error) {
     next(error);
