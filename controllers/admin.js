@@ -164,6 +164,16 @@ export async function deleteCategory(req, res, next) {
         .json({ message: "Category does not exist", statusCode: 422 });
     }
 
+    // checking if the category has products
+    const productsExist = await Product.find({ category: categoryExist._id });
+
+    if (productsExist.length > 0) {
+      return res.status(422).json({
+        message: "Category has products, cannot be deleted",
+        statusCode: 422,
+      });
+    }
+
     // deleting the image of the category
     deleteFile("public\\" + categoryExist.categoryImage);
 

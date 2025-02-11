@@ -28,7 +28,7 @@ function productFileFilter(req, file, cb) {
     file.mimetype === "image/png" ||
     file.mimetype === "image/jpg" ||
     file.mimetype === "image/jpeg" ||
-    file.mimetype === "model/gltf-binary"
+    file.mimetype === "application/octet-stream"
   ) {
     cb(null, true);
   } else {
@@ -166,10 +166,7 @@ router.delete("/promotion/delete", adminControllers.deletePromotion);
 // route to add new product
 router.put(
   "/new-product",
-  productsUploads.fields([
-    { name: "productImages" },
-    { name: "product3D", maxCount: 1 },
-  ]),
+  productsUploads.fields([{ name: "productImages" }, { name: "product3D" }]),
   [
     body("productName")
       .trim()
